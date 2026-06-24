@@ -78,6 +78,106 @@ const reasons = [
   ],
 ];
 
+const statistics = [
+  {
+    value: "10M+",
+    label: "Hành khách tin dùng",
+    desc: "Số lượng lượt đi và về thành công trên toàn quốc.",
+    icon: "fa-users",
+  },
+  {
+    value: "2,000+",
+    label: "Đối tác nhà xe",
+    desc: "Các hãng xe khách uy tín hàng đầu chạy khắp các tỉnh thành.",
+    icon: "fa-handshake",
+  },
+  {
+    value: "5,000+",
+    label: "Tuyến đường phủ khắp",
+    desc: "Kết nối mọi miền Tổ quốc từ Bắc vào Nam dễ dàng.",
+    icon: "fa-route",
+  },
+  {
+    value: "99%",
+    label: "Khách hàng hài lòng",
+    desc: "Được đánh giá cao về chất lượng dịch vụ và hỗ trợ.",
+    icon: "fa-star-half-stroke",
+  },
+];
+
+const partnerOperators = [
+  {
+    id: 1,
+    name: "Nhà xe Phương Trang (FUTA)",
+    rating: 4.8,
+    reviews: 12500,
+    routes: "Sài Gòn - Đà Lạt, Sài Gòn - Nha Trang, Sài Gòn - Cần Thơ",
+    color: "#ff3d00",
+    initials: "PT",
+    badge: "Phổ biến nhất",
+  },
+  {
+    id: 2,
+    name: "Nhà xe Thành Bưởi",
+    rating: 4.7,
+    reviews: 8400,
+    routes: "Sài Gòn - Đà Lạt, Sài Gòn - Cần Thơ",
+    color: "#00b0ff",
+    initials: "TB",
+    badge: "Dịch vụ 5 sao",
+  },
+  {
+    id: 4,
+    name: "Hãng xe Sao Việt",
+    rating: 4.6,
+    reviews: 3200,
+    routes: "Hà Nội - Sa Pa, Hà Nội - Lào Cai",
+    color: "#ffc107",
+    initials: "SV",
+    badge: "Tuyến Tây Bắc",
+  },
+  {
+    id: 3,
+    name: "Hải Vân Limousine",
+    rating: 4.9,
+    reviews: 4100,
+    routes: "Hà Nội - Hải Phòng, Sài Gòn - Vũng Tàu",
+    color: "#00e676",
+    initials: "HV",
+    badge: "Xe VIP Limousine",
+  },
+];
+
+const customerReviews = [
+  {
+    name: "Nguyễn Văn Hùng",
+    role: "Khách hàng thường xuyên",
+    rating: 5,
+    date: "20/06/2026",
+    content: "Dịch vụ đặt vé cực kỳ nhanh chóng và tiện lợi. Mình chỉ mất chưa đầy 1 phút là đã thanh toán xong và nhận được vé điện tử qua SMS. Sẽ tiếp tục ủng hộ VéXeAZ!",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+  {
+    name: "Trần Thị Mai",
+    role: "Khách du lịch",
+    rating: 5,
+    date: "18/06/2026",
+    content: "Rất thích tính năng chọn ghế ngồi trực quan của web. Mình có thể chủ động chọn những hàng ghế đầu để tránh say xe. Nhà xe phục vụ chu đáo, chạy đúng giờ.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+  {
+    name: "Lê Minh Tuấn",
+    role: "Nhân viên văn phòng",
+    rating: 5,
+    date: "15/06/2026",
+    content: "Mã giảm giá ở đây cực kỳ nhiều và dễ áp dụng. Chuyến đi khứ hồi Hà Nội - Sa Pa vừa rồi giúp mình tiết kiệm được hơn 100k. Đội ngũ tổng đài hỗ trợ 24/7 nhiệt tình.",
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+];
+
 function getToday() {
   const now = new Date();
   const year = now.getFullYear();
@@ -664,6 +764,65 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Thống kê thành tựu */}
+      <section className="trust-stats-section">
+        <div className="container">
+          <div className="stats-grid">
+            {statistics.map((stat) => (
+              <article className="stat-card" key={stat.label}>
+                <div className="stat-icon-wrapper">
+                  <i className={`fa-solid ${stat.icon}`} />
+                </div>
+                <div className="stat-info">
+                  <h3>{stat.value}</h3>
+                  <h4>{stat.label}</h4>
+                  <p>{stat.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Đối tác nhà xe uy tín */}
+      <section className="partners-section">
+        <div className="container home-section">
+          <div className="home-section-head text-center">
+            <span>Hợp tác cùng các thương hiệu lớn</span>
+            <h2>Đối Tác Nhà Xe Uy Tín</h2>
+            <p className="section-subtitle">
+              Chúng tôi liên kết với hơn 2,000+ nhà xe uy tín trên khắp cả nước để mang lại hành trình an toàn, chất lượng.
+            </p>
+          </div>
+          <div className="partners-grid">
+            {partnerOperators.map((partner) => (
+              <article
+                className="partner-card clickable-partner-card"
+                key={partner.name}
+                onClick={() => partner.id && navigate(`/nha-xe/${partner.id}`)}
+              >
+                {partner.badge && <span className="partner-badge">{partner.badge}</span>}
+                <div className="partner-avatar-wrapper" style={{ backgroundColor: partner.color }}>
+                  <span>{partner.initials}</span>
+                </div>
+                <div className="partner-content">
+                  <h3>{partner.name}</h3>
+                  <div className="partner-rating">
+                    <span className="stars">
+                      <i className="fa-solid fa-star" /> {partner.rating}
+                    </span>
+                    <span className="reviews">({partner.reviews.toLocaleString("vi-VN")} đánh giá)</span>
+                  </div>
+                  <p className="partner-routes">
+                    <i className="fa-solid fa-route" /> <strong>Tuyến chạy:</strong> {partner.routes}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="offers" className="container home-section">
         <div className="home-section-row">
           <div className="home-section-head">
@@ -778,6 +937,48 @@ export default function Home() {
                 <i className={`fa-solid ${icon}`} />
                 <h3>{title}</h3>
                 <p>{desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Đánh giá từ khách hàng */}
+      <section className="testimonials-section">
+        <div className="container home-section">
+          <div className="home-section-head text-center">
+            <span>Chia sẻ từ khách hàng</span>
+            <h2>Khách Hàng Nói Gì Về VéXeAZ</h2>
+            <p className="section-subtitle">
+              Sự hài lòng của khách hàng là động lực lớn nhất để chúng tôi không ngừng cải tiến dịch vụ.
+            </p>
+          </div>
+          <div className="testimonials-grid">
+            {customerReviews.map((review) => (
+              <article className="testimonial-card" key={review.name}>
+                <div className="testimonial-stars">
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <i key={i} className="fa-solid fa-star" />
+                  ))}
+                </div>
+                <p className="testimonial-text">
+                  <i className="fa-solid fa-quote-left quote-icon" />
+                  {review.content}
+                </p>
+                <div className="testimonial-author">
+                  <img src={review.avatar} alt={review.name} className="author-avatar" />
+                  <div className="author-info">
+                    <h4>
+                      {review.name}
+                      {review.verified && (
+                        <span className="verified-badge" title="Đã đặt vé thành công">
+                          <i className="fa-solid fa-circle-check" /> Đã xác thực
+                        </span>
+                      )}
+                    </h4>
+                    <span>{review.role} • {review.date}</span>
+                  </div>
+                </div>
               </article>
             ))}
           </div>
