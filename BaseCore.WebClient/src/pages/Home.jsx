@@ -78,6 +78,102 @@ const reasons = [
   ],
 ];
 
+const statistics = [
+  {
+    value: "10M+",
+    label: "Hành khách tin dùng",
+    desc: "Số lượng lượt đi và về thành công trên toàn quốc.",
+    icon: "fa-users",
+  },
+  {
+    value: "2,000+",
+    label: "Đối tác nhà xe",
+    desc: "Các hãng xe khách uy tín hàng đầu chạy khắp các tỉnh thành.",
+    icon: "fa-handshake",
+  },
+  {
+    value: "5,000+",
+    label: "Tuyến đường phủ khắp",
+    desc: "Kết nối mọi miền Tổ quốc từ Bắc vào Nam dễ dàng.",
+    icon: "fa-route",
+  },
+  {
+    value: "99%",
+    label: "Khách hàng hài lòng",
+    desc: "Được đánh giá cao về chất lượng dịch vụ và hỗ trợ.",
+    icon: "fa-star-half-stroke",
+  },
+];
+
+const partnerOperators = [
+  {
+    name: "Nhà xe Phương Trang (FUTA)",
+    rating: 4.8,
+    reviews: 12500,
+    routes: "Sài Gòn - Đà Lạt, Sài Gòn - Nha Trang, Sài Gòn - Cần Thơ",
+    color: "#ff3d00",
+    initials: "PT",
+    badge: "Phổ biến nhất",
+  },
+  {
+    name: "Nhà xe Thành Bưởi",
+    rating: 4.7,
+    reviews: 8400,
+    routes: "Sài Gòn - Đà Lạt, Sài Gòn - Cần Thơ",
+    color: "#00b0ff",
+    initials: "TB",
+    badge: "Dịch vụ 5 sao",
+  },
+  {
+    name: "Hãng xe Sao Việt",
+    rating: 4.6,
+    reviews: 3200,
+    routes: "Hà Nội - Sa Pa, Hà Nội - Lào Cai",
+    color: "#ffc107",
+    initials: "SV",
+    badge: "Tuyến Tây Bắc",
+  },
+  {
+    name: "Hải Vân Limousine",
+    rating: 4.9,
+    reviews: 4100,
+    routes: "Hà Nội - Hải Phòng, Sài Gòn - Vũng Tàu",
+    color: "#00e676",
+    initials: "HV",
+    badge: "Xe VIP Limousine",
+  },
+];
+
+const customerReviews = [
+  {
+    name: "Nguyễn Văn Hùng",
+    role: "Khách hàng thường xuyên",
+    rating: 5,
+    date: "20/06/2026",
+    content: "Dịch vụ đặt vé cực kỳ nhanh chóng và tiện lợi. Mình chỉ mất chưa đầy 1 phút là đã thanh toán xong và nhận được vé điện tử qua SMS. Sẽ tiếp tục ủng hộ VéXeAZ!",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+  {
+    name: "Trần Thị Mai",
+    role: "Khách du lịch",
+    rating: 5,
+    date: "18/06/2026",
+    content: "Rất thích tính năng chọn ghế ngồi trực quan của web. Mình có thể chủ động chọn những hàng ghế đầu để tránh say xe. Nhà xe phục vụ chu đáo, chạy đúng giờ.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+  {
+    name: "Lê Minh Tuấn",
+    role: "Nhân viên văn phòng",
+    rating: 5,
+    date: "15/06/2026",
+    content: "Mã giảm giá ở đây cực kỳ nhiều và dễ áp dụng. Chuyến đi khứ hồi Hà Nội - Sa Pa vừa rồi giúp mình tiết kiệm được hơn 100k. Đội ngũ tổng đài hỗ trợ 24/7 nhiệt tình.",
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&q=80",
+    verified: true,
+  },
+];
+
 function getToday() {
   const now = new Date();
   const year = now.getFullYear();

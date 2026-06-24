@@ -9080,3 +9080,369 @@ p.eyebrow {
   .booking-step-circle { width: 34px; height: 34px; font-size: 0.85rem; }
   .booking-step-line { top: 17px; left: calc(50% + 17px); right: calc(-50% + 17px); }
 }
+
+/* ══════════════════════════════════════════════════════════
+   TRIP DETAIL PANEL  (Thông tin chi tiết)
+   ══════════════════════════════════════════════════════════ */
+
+/* Allow the expanded card to wrap its children */
+.trip-result-card--expanded {
+  flex-wrap: wrap !important;
+  row-gap: 0 !important;
+}
+
+/* "Thông tin chi tiết" toggle button */
+.trip-detail-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.trip-detail-toggle-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+.trip-detail-toggle-btn.active {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+/* Full-width panel below the card's top row */
+.trip-detail-panel {
+  flex: 0 0 100%;
+  width: 100%;
+  border-top: 1.5px solid #f1f5f9;
+  margin-top: 16px;
+  padding-top: 4px;
+}
+
+/* ── Tab bar ── */
+.trip-detail-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1.5px solid #e8edf4;
+  margin-bottom: 0;
+}
+.trip-detail-tab-btn {
+  padding: 10px 18px;
+  border: none;
+  background: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.trip-detail-tab-btn:hover { color: #2563eb; }
+.trip-detail-tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+/* ── Content area ── */
+.trip-detail-content {
+  padding: 18px 0 6px;
+  min-height: 80px;
+}
+
+/* Loading / empty states */
+.td-loading {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.td-empty {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Đón / Trả ── */
+.td-pickup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+}
+.td-stops-head {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #1e3a5f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.td-stops-head .fa-circle-dot { color: #2563eb; }
+.td-stops-head .fa-location-dot { color: #f59e0b; }
+.td-stop-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.td-stop-item i {
+  font-size: 0.52rem;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.td-dot-blue  { color: #2563eb; }
+.td-dot-orange { color: #f59e0b; }
+.td-stop-item strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.td-stop-item small {
+  display: block;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 1px;
+}
+.td-stop-item span {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+.td-no-stops {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ── Giảm giá ── */
+.td-discount-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.td-promo-card {
+  border: 1.5px solid #dbeafe;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: #f8faff;
+}
+.td-promo-code {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+.td-promo-discount {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f59e0b;
+}
+.td-promo-desc {
+  font-size: 0.82rem;
+  color: #475569;
+  margin-top: 3px;
+}
+.td-promo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 6px;
+}
+.td-promo-meta span {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* ── Đánh giá ── */
+.td-review-section { display: flex; flex-direction: column; gap: 14px; }
+.td-review-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.td-avg-rating {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #f59e0b;
+  line-height: 1;
+}
+.td-star-icon { color: #f59e0b; font-size: 1rem; }
+.td-review-count { font-size: 0.85rem; color: #64748b; font-weight: 600; }
+.td-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.td-review-item {
+  border: 1.5px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fafbfc;
+}
+.td-review-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+.td-review-top strong {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.td-review-top span {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+.td-review-stars {
+  color: #f59e0b;
+  font-size: 0.88rem;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.td-review-item p {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Chính sách ── */
+.td-policy { max-width: 680px; }
+.td-policy h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 8px;
+}
+.td-policy h4:not(:first-child) { margin-top: 14px; }
+.td-policy ul {
+  margin: 0 0 4px;
+  padding-left: 18px;
+}
+.td-policy ul li {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+.td-policy ul li:nth-child(2),
+.td-policy ul li:nth-child(3) { color: #dc2626; }
+.td-policy p {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 3px 0;
+}
+
+/* ── Hình ảnh ── */
+.td-images-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.td-img-thumb {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  aspect-ratio: 4 / 3;
+  background: #f1f5f9;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.td-img-thumb:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.td-img-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Lightbox ── */
+.td-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: tdFadeIn 0.18s ease;
+}
+@keyframes tdFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.td-lightbox-img {
+  max-width: min(900px, 92vw);
+  max-height: 88vh;
+  border-radius: 16px;
+  object-fit: contain;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  animation: tdSlideIn 0.18s ease;
+}
+@keyframes tdSlideIn {
+  from { transform: scale(0.94); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.td-lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s;
+}
+.td-lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .td-pickup-grid { grid-template-columns: 1fr; gap: 16px; }
+  .td-images-grid { grid-template-columns: repeat(3, 1fr); }
+  .trip-detail-tab-btn { padding: 9px 12px; font-size: 0.82rem; }
+}
+@media (max-width: 600px) {
+  .td-images-grid { grid-template-columns: repeat(2, 1fr); }
+  .trip-detail-tabs { overflow-x: auto; }
+  .trip-detail-tab-btn { white-space: nowrap; padding: 9px 10px; font-size: 0.8rem; }
+}
