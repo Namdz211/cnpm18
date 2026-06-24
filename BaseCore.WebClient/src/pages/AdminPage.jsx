@@ -195,6 +195,7 @@ import { useAuth } from '../contexts/AuthContext';
 // ─── Tabs (đặt ngoài component vì không phụ thuộc state) ─────────────────────
 const ADMIN_TABS = [
   ['dashboard',  'Tổng quan',  'fa-chart-line'],
+  ['revenue',    'Doanh thu',   'fa-chart-bar'],
   ['trips',      'Chuyến xe',  'fa-route'],
   ['orders',     'Đơn hàng',   'fa-file-invoice'],
   ['promotions', 'Khuyến mãi', 'fa-tags'],
@@ -222,6 +223,7 @@ export default function AdminPage() {
 
   const adminPaths = {
     dashboard:  `${basePath}/dashboard`,
+    revenue:    `${basePath}/revenue`,
     buses:      `${basePath}/buses`,
     trips:      `${basePath}/trips`,
     orders:     `${basePath}/bookings`,

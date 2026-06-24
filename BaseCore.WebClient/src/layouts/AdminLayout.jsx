@@ -123,6 +123,7 @@ import { apiClient } from '../services/httpClient';
 
 const ALL_MENU = [
   { id: 'dashboard',  label: 'Thống kê',            icon: 'fa-chart-line', roles: [1, 2] },
+  { id: 'revenue',    label: 'Doanh thu',            icon: 'fa-chart-bar',  roles: [1, 2] },
   { id: 'promotions', label: 'Quản lý mã giảm giá', icon: 'fa-tags',       roles: [1] },
   { id: 'payments',   label: 'Lịch sử thanh toán',  icon: 'fa-credit-card',roles: [1] },
   { id: 'reviews',    label: 'Quản lý đánh giá',    icon: 'fa-star',       roles: [1] },

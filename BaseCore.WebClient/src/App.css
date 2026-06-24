@@ -5860,7 +5860,7 @@ a:hover,
   background: #f8fafc;
 }
 .dashboard-rank-card table {
-  min-width: 560px;
+  min-width: 0;
 }
 .dashboard-status-list {
   display: grid;
@@ -7092,7 +7092,7 @@ a:hover,
 
 /* --- Admin payment filters polish --- */
 .payment-filter-grid {
-  grid-template-columns: minmax(280px, 1.65fr) minmax(190px, 0.8fr) minmax(180px, 0.9fr) minmax(150px, 0.7fr) auto !important;
+  grid-template-columns: minmax(280px, 1.65fr) minmax(190px, 0.8fr) minmax(280px, 1fr) auto !important;
   gap: 12px !important;
   padding: 14px;
   border: 1px solid #e5eefb;
@@ -7831,12 +7831,14 @@ input:focus, select:focus, textarea:focus {
 /* Action buttons in table */
 .admin-actions {
   gap: 6px !important;
+  flex-wrap: nowrap !important;
 }
 .admin-actions .btn {
   font-size: 0.82rem;
   padding: 6px 14px;
   border-radius: 8px;
   font-weight: 700;
+  white-space: nowrap;
 }
 .admin-actions .btn-outline {
   background: #f0f7ff;

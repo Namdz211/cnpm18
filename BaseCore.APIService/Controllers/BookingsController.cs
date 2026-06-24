@@ -57,7 +57,7 @@ namespace BaseCore.APIService.Controllers
             int pageSize = 10)
         {
             page = page <= 0 ? 1 : page;
-            pageSize = pageSize <= 0 ? 10 : Math.Min(pageSize, 100);
+            pageSize = pageSize <= 0 ? 10 : Math.Min(pageSize, 2000);
 
             var query = _context.Bookings
                 .AsNoTracking()
@@ -132,7 +132,9 @@ namespace BaseCore.APIService.Controllers
                 .Take(pageSize)
                 .Select(x => new
                 {
-                    bookingID = x.BookingID,
+                    bookingID       = x.BookingID,
+                    tripID          = x.TripID,
+                    busLicensePlate = x.Trip == null || x.Trip.Bus == null ? null : x.Trip.Bus.LicensePlate,
                     operatorID = x.Trip == null || x.Trip.Bus == null ? (int?)null : x.Trip.Bus.OperatorID,
                     operatorName = x.Trip != null && x.Trip.Bus != null && x.Trip.Bus.Operator != null
                         ? x.Trip.Bus.Operator.Name

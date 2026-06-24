@@ -77,7 +77,8 @@ namespace BaseCore.APIService.Controllers
             {
                 // Nhà xe - chỉ thống kê của mình
                 var totalRevenue = await _context.Bookings
-                    .Where(x => x.BookingStatus == BookingStatusConstant.Confirmed
+                    .Where(x => (x.BookingStatus == BookingStatusConstant.Confirmed
+                              || x.BookingStatus == BookingStatusConstant.Completed)
                         && x.Trip.Bus.OperatorID == operatorId.Value)
                     .SumAsync(x => (decimal?)x.TotalPrice) ?? 0;
 
@@ -101,7 +102,8 @@ namespace BaseCore.APIService.Controllers
             {
                 // Admin - thống kê toàn hệ thống
                 var totalRevenue = await _context.Bookings
-                    .Where(x => x.BookingStatus == BookingStatusConstant.Confirmed)
+                    .Where(x => x.BookingStatus == BookingStatusConstant.Confirmed
+                             || x.BookingStatus == BookingStatusConstant.Completed)
                     .SumAsync(x => (decimal?)x.TotalPrice) ?? 0;
 
                 return Ok(new

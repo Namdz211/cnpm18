@@ -1003,18 +1003,22 @@ export default function AdminDashboard({
         )}
       </section>
 
-      {/* ── Zone 6: Chuyến sắp chạy + Đơn mới nhất (scroll) ── */}
-      <section className="admin-grid">
+      {/* ── Zone 6: Chuyến sắp chạy (full width) ── */}
+      <section style={{ marginBottom: 20 }}>
         <div className="admin-card">
           <h3>Chuyến sắp chạy</h3>
-          <div style={{ maxHeight: 320, overflowY: "auto" }}>
+          <div style={{ maxHeight: 320, overflowY: "auto", overflowX: "hidden" }}>
             <DashboardTripsTable trips={upcomingTrips} />
           </div>
         </div>
+      </section>
+
+      {/* ── Zone 7: Đơn đặt vé mới nhất (full width) ── */}
+      <section style={{ marginBottom: 20 }}>
         <div className="admin-card">
           <h3>Đơn đặt vé mới nhất</h3>
-          <div className="table-wrap" style={{ maxHeight: 320, overflowY: "auto" }}>
-            <table>
+          <div style={{ maxHeight: 320, overflowY: "auto", overflowX: "hidden" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
                   <th>ID</th>

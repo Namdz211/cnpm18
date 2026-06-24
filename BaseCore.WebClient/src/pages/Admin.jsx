@@ -1,4 +1,4 @@
-﻿// import { useEffect, useMemo, useState } from "react";
+// import { useEffect, useMemo, useState } from "react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -352,11 +352,6 @@ const load = async (silent = false) => {
 
   return (
     <>
-      <div className="admin-content-tools">
-        <button className="btn btn-primary" onClick={load}>
-          <i className="fa-solid fa-rotate" /> Tải lại
-        </button>
-      </div>
       {loading ? (
         <div className="admin-card">Đang tải dữ liệu...</div>
       ) : (
@@ -440,6 +435,7 @@ if (isOperator && active === 'operators')
   if (isOperator && active === 'users')
     return <div className="admin-card">Bạn không có quyền truy cập trang này.</div>;
  
+  if (active === 'revenue') return <RevenueManager />;
   if (active === 'trips')
     return <TripsManager trips={trips} buses={buses} operators={operators} onRefresh={onRefresh} isOperator={isOperator} />;
   if (active === 'orders')   return <BookingsManager />;
@@ -3239,7 +3235,7 @@ export function AdminTripDetail({ tripId }) {
 //                   <td>{bookingStatusBadge(bs)}</td>
  
 //                   {/* Cột Thao tác */}
-//                   <td className="admin-actions" style={{ minWidth: 220 }}>
+//                   <td className="admin-actions" style={{ minWidth: 260 }}>
 //                     {/* ① Cash + Pending → nút xác nhận thu tiền */}
 //                     {isCash && bs === 0 && (
 //                       <button
@@ -3526,7 +3522,7 @@ function BookingsManager() {
       <div className="payment-filter-grid" style={{ marginBottom: 12 }}>
 
         {/* Autocomplete search */}
-        <div className="payment-suggest-wrap" ref={suggestRef} style={{ gridColumn: 'span 2' }}>
+        <div className="payment-suggest-wrap" ref={suggestRef}>
           <div className="payment-suggest-input-wrap">
             <i className="fa-solid fa-magnifying-glass payment-suggest-icon" />
             <input
@@ -3667,7 +3663,7 @@ function BookingsManager() {
           <thead>
             <tr>
               <th>Mã đơn</th>
-              <th>Khách hàng</th>
+              <th style={{ minWidth: 160 }}>Khách hàng</th>
               <th>Số điện thoại</th>
               <th>Tuyến đường</th>
               <th>Nhà xe</th>
@@ -3675,7 +3671,7 @@ function BookingsManager() {
               <th>Tổng tiền</th>
               <th>Thanh toán</th>
               <th>Trạng thái đơn</th>
-              <th>Thao tác</th>
+              <th style={{ width: 140 }}>Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -3700,10 +3696,10 @@ function BookingsManager() {
                   <td>{formatVND(pick(item, ['totalPrice', 'TotalPrice'], 0))}</td>
                   <td>{paymentBadge(ps, pm)}</td>
                   <td>{bookingStatusBadge(bs)}</td>
-                  <td className="admin-actions" style={{ minWidth: 220 }}>
+                  <td className="admin-actions" style={{ minWidth: 140, flexDirection: 'column', alignItems: 'stretch', gap: 6 }}>
                     {isOperator && isCash && bs === 0 && (
                       <button className="btn btn-primary" disabled={isProcessing} onClick={() => handleConfirmCash(id)}>
-                        💵 Thu tiền & Xác nhận
+                        Thu tiền & Xác nhận
                       </button>
                     )}
                     {/* Nhà xe: duyệt/từ chối hủy vé */}
@@ -4848,17 +4844,13 @@ const applyFilters = (e) => {
         <table>
           <thead>
             <tr>
-              {/* <th>Mã GD</th> */}
               <th>Đơn</th>
               <th>Khách hàng</th>
               <th>Tuyến</th>
               <th>Số tiền</th>
               <th>Phương thức</th>
               <th>Trạng thái</th>
-              {/* <th>Mã giao dịch</th> */}
-              <th>Ngày tạo</th>
-              {/* Chỉ hiện cột Thao tác nếu là admin, hoặc operator với đơn tiền mặt */}
-              {/* <th>Thao tác</th> */}
+              <th style={{ width: 110 }}></th>
             </tr>
           </thead>
           <tbody>
@@ -6714,7 +6706,8 @@ function BusesManager({ operators: initialOperators = [], onRefresh, isOperator 
   };
 
   const saveImages = async () => {
-    if (pendingFiles.length === 0 || !imgModal) return;
+    if (!imgModal) return;
+    if (pendingFiles.length === 0) { closeImgModal(); return; }
     setImgLoading(true);
     try {
       let avatarImageId = null;
@@ -6730,8 +6723,7 @@ function BusesManager({ operators: initialOperators = [], onRefresh, isOperator 
       pendingFiles.forEach((p) => URL.revokeObjectURL(p.previewUrl));
       setPendingFiles([]);
       setPendingAvatar(null);
-      const imgs = await busApi.getImages(imgModal.busId);
-      setImgModal((m) => ({ ...m, images: Array.isArray(imgs) ? imgs : [] }));
+      closeImgModal();
     } catch (e) {
       alert(e.message || "Không upload được ảnh.");
     } finally {
@@ -7192,11 +7184,13 @@ function BusesManager({ operators: initialOperators = [], onRefresh, isOperator 
               <button
                 className="btn btn-primary"
                 onClick={saveImages}
-                disabled={imgLoading || pendingFiles.length === 0}
+                disabled={imgLoading}
               >
                 {imgLoading
                   ? <><i className="fa-solid fa-spinner fa-spin" /> Đang lưu...</>
-                  : <><i className="fa-solid fa-floppy-disk" /> Lưu {pendingFiles.length > 0 ? `(${pendingFiles.length} ảnh)` : ""}</>}
+                  : pendingFiles.length > 0
+                    ? <><i className="fa-solid fa-floppy-disk" /> Lưu ({pendingFiles.length} ảnh)</>
+                    : <><i className="fa-solid fa-check" /> Xong</>}
               </button>
             </div>
           </div>
@@ -9611,3 +9605,212 @@ function SeatLayoutEditor({ layout, capacity, onApply, onClose }) {
     </div>
   );
 }
+// ==================== DOANH THU ====================
+function RevenueManager() {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const [filterTripId, setFilterTripId] = useState('');
+  const [filterLicensePlate, setFilterLicensePlate] = useState('');
+  const [filterFrom, setFilterFrom] = useState('');
+  const [filterTo, setFilterTo] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const raw = await apiClient.get('/api/bookings', { params: { pageSize: 2000 } }).then(r => r.data).catch(() => []);
+        const items = Array.isArray(raw) ? raw : (raw?.items ?? raw?.Items ?? []);
+        setBookings(items);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // Lọc: chỉ đơn đã thanh toán (paymentStatus = 1)
+  const filtered = useMemo(() => {
+    return bookings.filter(b => {
+      if (b.paymentStatus !== 1) return false;
+      if (filterTripId.trim() && b.tripID != null && !String(b.tripID).includes(filterTripId.trim())) return false;
+      if (filterLicensePlate.trim() && !String(b.busLicensePlate ?? '').toLowerCase().includes(filterLicensePlate.trim().toLowerCase())) return false;
+      const bd = new Date(b.bookingDate ?? 0);
+      if (filterFrom) { const f = new Date(filterFrom); f.setHours(0, 0, 0, 0); if (bd < f) return false; }
+      if (filterTo)   { const t = new Date(filterTo);   t.setHours(23, 59, 59, 999); if (bd > t) return false; }
+      return true;
+    });
+  }, [bookings, filterTripId, filterLicensePlate, filterFrom, filterTo]);
+
+  const totalRevenue = useMemo(() => filtered.reduce((s, b) => s + Number(b.totalPrice ?? 0), 0), [filtered]);
+  const totalTickets = useMemo(() => filtered.reduce((s, b) => s + Number(b.totalSeats ?? 1), 0), [filtered]);
+
+  // Nhóm theo tripID, dùng trực tiếp từ dữ liệu booking
+  const byTrip = useMemo(() => {
+    const map = {};
+    filtered.forEach(b => {
+      // Dùng tripID làm key; nếu chưa có (backend chưa restart) fallback về route
+      const dep = b.departureLocation ?? '';
+      const arr = b.arrivalLocation ?? '';
+      const tid = b.tripID != null ? String(b.tripID) : `route:${dep}-${arr}`;
+      if (!map[tid]) {
+        map[tid] = {
+          tripId: b.tripID != null ? tid : null,
+          route: dep && arr ? `${dep} → ${arr}` : dep || arr || '—',
+          licensePlate: b.busLicensePlate ?? '—',
+          departureTime: b.departureTime ?? null,
+          revenue: 0, tickets: 0, orders: 0,
+        };
+      }
+      map[tid].revenue += Number(b.totalPrice ?? 0);
+      map[tid].tickets += Number(b.totalSeats ?? 1);
+      map[tid].orders  += 1;
+    });
+    return Object.values(map).sort((a, b) => b.revenue - a.revenue);
+  }, [filtered]);
+
+  const hasFilter = filterTripId || filterLicensePlate || filterFrom || filterTo;
+  const fmtDate = dt => dt ? new Date(dt).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+
+  return (
+    <section className="admin-card" style={{ padding: 24, width: '100%', boxSizing: 'border-box' }}>
+      <div className="admin-section-head" style={{ marginBottom: 20 }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700 }}>
+            <i className="fa-solid fa-chart-bar" style={{ marginRight: 8, color: '#6366f1' }} />
+            Doanh thu
+          </h3>
+          <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+            Thống kê doanh số theo chuyến xe (chỉ tính đơn đã thanh toán)
+          </p>
+        </div>
+      </div>
+
+      {/* Bộ lọc */}
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end', padding: 16, background: '#f8fafc', borderRadius: 10, marginBottom: 20, border: '1px solid #e2e8f0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>
+            <i className="fa-solid fa-route" style={{ marginRight: 5, color: '#6366f1' }} />ID Chuyến xe
+          </label>
+          <input type="text" placeholder="Nhập ID chuyến..." value={filterTripId}
+            onChange={e => setFilterTripId(e.target.value)}
+            style={{ padding: '7px 10px', borderRadius: 7, border: `1.5px solid ${filterTripId ? '#6366f1' : '#e2e8f0'}`, fontSize: '0.85rem', outline: 'none', background: filterTripId ? '#eff6ff' : '#fff', width: 130 }} />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>
+            <i className="fa-solid fa-bus" style={{ marginRight: 5, color: '#6366f1' }} />Biển số xe
+          </label>
+          <input type="text" placeholder="Nhập biển số..." value={filterLicensePlate}
+            onChange={e => setFilterLicensePlate(e.target.value)}
+            style={{ padding: '7px 10px', borderRadius: 7, border: `1.5px solid ${filterLicensePlate ? '#6366f1' : '#e2e8f0'}`, fontSize: '0.85rem', outline: 'none', background: filterLicensePlate ? '#eff6ff' : '#fff', width: 130 }} />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>
+            <i className="fa-solid fa-calendar-days" style={{ marginRight: 5, color: '#6366f1' }} />Từ ngày
+          </label>
+          <input type="date" value={filterFrom} onChange={e => setFilterFrom(e.target.value)}
+            style={{ padding: '7px 10px', borderRadius: 7, border: `1.5px solid ${filterFrom ? '#6366f1' : '#e2e8f0'}`, fontSize: '0.85rem', outline: 'none', background: filterFrom ? '#eff6ff' : '#fff' }} />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569' }}>
+            <i className="fa-solid fa-calendar-days" style={{ marginRight: 5, color: '#6366f1' }} />Đến ngày
+          </label>
+          <input type="date" value={filterTo} min={filterFrom || undefined} onChange={e => setFilterTo(e.target.value)}
+            style={{ padding: '7px 10px', borderRadius: 7, border: `1.5px solid ${filterTo ? '#6366f1' : '#e2e8f0'}`, fontSize: '0.85rem', outline: 'none', background: filterTo ? '#eff6ff' : '#fff' }} />
+        </div>
+        {hasFilter && (
+          <button onClick={() => { setFilterTripId(''); setFilterLicensePlate(''); setFilterFrom(''); setFilterTo(''); }}
+            style={{ padding: '7px 14px', borderRadius: 7, border: '1.5px solid #e2e8f0', background: '#fff', fontSize: '0.85rem', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <i className="fa-solid fa-rotate-left" /> Xóa bộ lọc
+          </button>
+        )}
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 40, color: '#64748b' }}>
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 24, marginBottom: 8, display: 'block' }} />
+          Đang tải dữ liệu...
+        </div>
+      ) : (
+        <>
+          {/* Thẻ tóm tắt */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+            {[
+              { label: 'Tổng doanh thu',        value: formatVND(totalRevenue), icon: 'fa-sack-dollar', color: '#16a34a', bg: '#dcfce7' },
+              { label: 'Số đơn đã thu',          value: filtered.length,        icon: 'fa-ticket',      color: '#2563eb', bg: '#dbeafe' },
+              { label: 'Số vé bán ra',            value: totalTickets,           icon: 'fa-couch',       color: '#7c3aed', bg: '#ede9fe' },
+              { label: 'Số chuyến có doanh thu', value: byTrip.length,          icon: 'fa-route',       color: '#ea580c', bg: '#ffedd5' },
+            ].map(card => (
+              <div key={card.label} style={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 12, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 10, background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <i className={`fa-solid ${card.icon}`} style={{ fontSize: 18, color: card.color }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.2 }}>{card.value}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 2 }}>{card.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bảng chi tiết */}
+          <div style={{ overflowX: 'auto' }}>
+            <h4 style={{ margin: '0 0 12px', fontSize: '0.95rem', fontWeight: 700, color: '#0f172a' }}>
+              <i className="fa-solid fa-table-list" style={{ marginRight: 7, color: '#6366f1' }} />
+              Doanh thu theo từng chuyến xe
+            </h4>
+            {byTrip.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8', fontSize: '0.9rem', border: '2px dashed #e2e8f0', borderRadius: 10 }}>
+                <i className="fa-solid fa-chart-bar" style={{ fontSize: 32, marginBottom: 10, display: 'block' }} />
+                Không có dữ liệu doanh thu{hasFilter ? ' phù hợp bộ lọc' : ''}.
+              </div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                <thead>
+                  <tr style={{ background: '#f1f5f9' }}>
+                    {['ID Chuyến', 'Tuyến đường', 'Xe', 'Ngày đặt', 'Số đơn', 'Số vé', 'Doanh thu'].map(h => (
+                      <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#374151', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.03em', borderBottom: '2px solid #e2e8f0' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {byTrip.map((row, i) => (
+                    <tr key={row.tripId} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                      <td style={{ padding: '10px 14px', color: '#6366f1', fontWeight: 600 }}>
+                        {row.tripId != null ? `#${row.tripId}` : '—'}
+                      </td>
+                      <td style={{ padding: '10px 14px', color: '#0f172a', fontWeight: 500 }}>{row.route}</td>
+                      <td style={{ padding: '10px 14px', color: '#475569' }}>
+                        {row.licensePlate !== '—' ? row.licensePlate : <span style={{ color: '#cbd5e1' }}>—</span>}
+                      </td>
+                      <td style={{ padding: '10px 14px', color: '#475569' }}>{fmtDate(row.departureTime)}</td>
+                      <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                        <span style={{ background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: 20, fontWeight: 600, fontSize: '0.82rem' }}>{row.orders}</span>
+                      </td>
+                      <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                        <span style={{ background: '#ede9fe', color: '#6d28d9', padding: '2px 10px', borderRadius: 20, fontWeight: 600, fontSize: '0.82rem' }}>{row.tickets}</span>
+                      </td>
+                      <td style={{ padding: '10px 14px', fontWeight: 700, color: '#16a34a' }}>{formatVND(row.revenue)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                {byTrip.length > 1 && (
+                  <tfoot>
+                    <tr style={{ background: '#f0fdf4', borderTop: '2px solid #bbf7d0' }}>
+                      <td colSpan={4} style={{ padding: '10px 14px', fontWeight: 700, color: '#166534' }}>
+                        <i className="fa-solid fa-sigma" style={{ marginRight: 6 }} />TỔNG CỘNG
+                      </td>
+                      <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#1d4ed8' }}>{filtered.length}</td>
+                      <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#6d28d9' }}>{totalTickets}</td>
+                      <td style={{ padding: '10px 14px', fontWeight: 800, color: '#15803d', fontSize: '1rem' }}>{formatVND(totalRevenue)}</td>
+                    </tr>
+                  </tfoot>
+                )}
+              </table>
+            )}
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+

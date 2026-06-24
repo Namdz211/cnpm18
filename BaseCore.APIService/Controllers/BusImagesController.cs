@@ -92,13 +92,12 @@ namespace BaseCore.APIService.Controllers
             if (bus == null) return NotFound(new { message = "Xe không tồn tại" });
             if (bus.OperatorID != operatorId.Value) return Forbid();
 
-            // Nếu đặt làm avatar, xóa avatar cũ
+            // Nếu đặt làm avatar, xóa avatar cũ trước (direct SQL tránh vi phạm unique constraint)
             if (image.IsAvatar)
             {
-                var oldAvatar = await _context.BusImages
-                    .FirstOrDefaultAsync(x => x.BusID == image.BusID && x.IsAvatar);
-                if (oldAvatar != null)
-                    oldAvatar.IsAvatar = false;
+                await _context.BusImages
+                    .Where(x => x.BusID == image.BusID && x.IsAvatar)
+                    .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsAvatar, false));
             }
 
             image.UploadedAt = DateTime.Now;
@@ -134,13 +133,12 @@ namespace BaseCore.APIService.Controllers
             if (existing == null) return NotFound();
             if (existing.Bus?.OperatorID != operatorId.Value) return Forbid();
 
-            // Nếu đặt làm avatar, xóa avatar cũ
+            // Nếu đặt làm avatar, xóa avatar cũ trước (direct SQL tránh vi phạm unique constraint)
             if (image.IsAvatar && !existing.IsAvatar)
             {
-                var oldAvatar = await _context.BusImages
-                    .FirstOrDefaultAsync(x => x.BusID == existing.BusID && x.IsAvatar && x.ImageID != id);
-                if (oldAvatar != null)
-                    oldAvatar.IsAvatar = false;
+                await _context.BusImages
+                    .Where(x => x.BusID == existing.BusID && x.IsAvatar && x.ImageID != id)
+                    .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsAvatar, false));
             }
 
             existing.ImageURL = image.ImageURL;
@@ -160,20 +158,26 @@ namespace BaseCore.APIService.Controllers
             if (!operatorId.HasValue)
                 return BadRequest(new { message = "Tài khoản chưa liên kết với nhà xe" });
 
+            // AsNoTracking để tránh EF change tracker gây conflict
             var image = await _context.BusImages
+                .AsNoTracking()
                 .Include(x => x.Bus)
                 .FirstOrDefaultAsync(x => x.ImageID == id);
             if (image == null) return NotFound();
             if (image.Bus?.OperatorID != operatorId.Value) return Forbid();
 
-            // Xóa avatar cũ
-            var oldAvatar = await _context.BusImages
-                .FirstOrDefaultAsync(x => x.BusID == image.BusID && x.IsAvatar && x.ImageID != id);
-            if (oldAvatar != null)
-                oldAvatar.IsAvatar = false;
+            // Transaction + 2 ExecuteUpdateAsync: không qua SaveChangesAsync, tránh SQL Server reorder
+            using var tx = await _context.Database.BeginTransactionAsync();
 
-            image.IsAvatar = true;
-            await _context.SaveChangesAsync();
+            await _context.BusImages
+                .Where(x => x.BusID == image.BusID && x.IsAvatar)
+                .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsAvatar, false));
+
+            await _context.BusImages
+                .Where(x => x.ImageID == id)
+                .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsAvatar, true));
+
+            await tx.CommitAsync();
 
             return Ok(new { message = "Đã đặt làm ảnh đại diện" });
         }
@@ -243,11 +247,6 @@ namespace BaseCore.APIService.Controllers
 
             // Nếu chưa có ảnh nào → tự đặt làm avatar
             var isFirst = !await _context.BusImages.AnyAsync(x => x.BusID == busId);
-            if (isFirst)
-            {
-                var oldAvatar = await _context.BusImages.FirstOrDefaultAsync(x => x.BusID == busId && x.IsAvatar);
-                if (oldAvatar != null) oldAvatar.IsAvatar = false;
-            }
 
             var sortOrder = await _context.BusImages.CountAsync(x => x.BusID == busId);
             var image = new BusImage
