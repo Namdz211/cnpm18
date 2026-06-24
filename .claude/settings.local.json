@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Process -Id 31788)",
+      "PowerShell(Stop-Process -Id 31788 -Force)",
+      "Bash(git rm *)",
+      "Bash(xargs -r git rm -r --cached)",
+      "Bash(xargs -r git rm -rf --cached)",
+      "PowerShell(Get-Process -Name \"BaseCore.APIService\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Id 36748 -Force)",
+      "Bash(grep -v \"//\")",
+      "Bash(grep -E \"\\\\.\\(jsx|js|css\\)$\")"
+    ]
+  }
+}
