@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using BaseCore.Repository;
 using BaseCore.Repository.Authen;
 using BaseCore.Services.Authen;
+using BaseCore.AuthService.Services;
 using BaseCore.Common;
 using BaseCore.Entities;
 using System.Text;
@@ -75,6 +76,7 @@ builder.Services.AddDbContext<MySqlDbContext>(options =>
 // DI for Authentication Services and Repositories only
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 // JWT Authentication Key
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? "YourSecretKeyForAuthenticationShouldBeLongEnough");
